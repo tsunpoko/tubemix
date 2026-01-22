@@ -1,0 +1,52 @@
+.level-meter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.meter-label {
+  font-size: 0.6rem;
+  font-family: var(--font-mono);
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.meter-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 4px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: var(--radius-sm);
+}
+
+.meter-segment {
+  width: 12px;
+  height: 6px;
+  border-radius: 1px;
+  transition: background-color 50ms ease;
+}
+
+.meter-segment.active {
+  opacity: 1;
+}
+
+.meter-segment.peak {
+  opacity: 1;
+  animation: peak-flash 0.3s ease;
+}
+
+@keyframes peak-flash {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}

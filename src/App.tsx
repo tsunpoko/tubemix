@@ -16,15 +16,22 @@ function App() {
   const [midiConnected, setMidiConnected] = useState(false)
   const [waveformVisible, setWaveformVisible] = useState(true)
   const [crossfaderValue, setCrossfaderValue] = useState(0.5)
-  const [eqValues, setEqValues] = useState({ low: 0, mid: 0, high: 0 })
+  const [eqValuesA, setEqValuesA] = useState({ low: 0.5, mid: 0.5, high: 0.5 })
+  const [eqValuesB, setEqValuesB] = useState({ low: 0.5, mid: 0.5, high: 0.5 })
   const [deckBPitch, setDeckBPitch] = useState(0)
   const [deckBBpm, setDeckBBpm] = useState<number | null>(null)
   const [deckBPlaying, setDeckBPlaying] = useState(false)
   const [youtubeUrl, setYoutubeUrl] = useState('')
+  const [deckBAnalyser, setDeckBAnalyser] = useState<AnalyserNode | null>(null)
+  const [volumeA, setVolumeA] = useState(1)
+  const [volumeB, setVolumeB] = useState(1)
+  const [filterA, setFilterA] = useState(0.5)
 
   // Initialize audio engine
   useEffect(() => {
     audioEngineRef.current = new AudioEngine()
+    // Set analyser for level meter
+    setDeckBAnalyser(audioEngineRef.current.getAnalyser())
 
     return () => {
       audioEngineRef.current?.dispose()
@@ -40,7 +47,7 @@ function App() {
       setMidiConnected(connected)
     })
 
-    midi.onPitchFader((value) => {
+    midi.onPitchFader('b', (value) => {
       // Convert 0-1 to -8% to +8%
       const pitch = (value - 0.5) * 16
       setDeckBPitch(pitch)
@@ -52,22 +59,34 @@ function App() {
       audioEngineRef.current?.setCrossfader(value)
     })
 
-    midi.onEQ('low', (value) => {
-      setEqValues(prev => ({ ...prev, low: value }))
+    midi.onEQ('a', 'low', (value) => {
+      setEqValuesA(prev => ({ ...prev, low: value }))
+    })
+    midi.onEQ('a', 'mid', (value) => {
+      setEqValuesA(prev => ({ ...prev, mid: value }))
+    })
+    midi.onEQ('a', 'high', (value) => {
+      setEqValuesA(prev => ({ ...prev, high: value }))
+    })
+
+    midi.onEQ('b', 'low', (value) => {
+      setEqValuesB(prev => ({ ...prev, low: value }))
       audioEngineRef.current?.setEQ('low', value)
     })
-
-    midi.onEQ('mid', (value) => {
-      setEqValues(prev => ({ ...prev, mid: value }))
+    midi.onEQ('b', 'mid', (value) => {
+      setEqValuesB(prev => ({ ...prev, mid: value }))
       audioEngineRef.current?.setEQ('mid', value)
     })
-
-    midi.onEQ('high', (value) => {
-      setEqValues(prev => ({ ...prev, high: value }))
+    midi.onEQ('b', 'high', (value) => {
+      setEqValuesB(prev => ({ ...prev, high: value }))
       audioEngineRef.current?.setEQ('high', value)
     })
 
-    midi.onPlay(() => {
+    midi.onFilter('a', (value) => {
+      setFilterA(value)
+    })
+
+    midi.onPlay('b', () => {
       if (deckBPlaying) {
         audioEngineRef.current?.pause()
         setDeckBPlaying(false)
@@ -79,6 +98,14 @@ function App() {
 
     midi.onDeviceChange((connected) => {
       setMidiConnected(connected)
+    })
+
+    midi.onVolume('a', (value) => {
+      setVolumeA(value)
+    })
+
+    midi.onVolume('b', (value) => {
+      setVolumeB(value)
     })
 
     return () => {
@@ -110,14 +137,24 @@ function App() {
     }
   }, [deckBPlaying])
 
+  const handleAudioInputSelect = useCallback(async (deviceId: string) => {
+    if (audioEngineRef.current) {
+      await audioEngineRef.current.startAudioInput(deviceId)
+    }
+  }, [])
+
   const handleCrossfaderChange = useCallback((value: number) => {
     setCrossfaderValue(value)
     audioEngineRef.current?.setCrossfader(value)
   }, [])
 
-  const handleEqChange = useCallback((band: 'low' | 'mid' | 'high', value: number) => {
-    setEqValues(prev => ({ ...prev, [band]: value }))
-    audioEngineRef.current?.setEQ(band, value)
+  const handleEqChange = useCallback((deck: 'a' | 'b', band: 'low' | 'mid' | 'high', value: number) => {
+    if (deck === 'a') {
+      setEqValuesA(prev => ({ ...prev, [band]: value }))
+    } else {
+      setEqValuesB(prev => ({ ...prev, [band]: value }))
+      audioEngineRef.current?.setEQ(band, value)
+    }
   }, [])
 
   return (
@@ -133,6 +170,9 @@ function App() {
           youtubeUrl={youtubeUrl}
           onUrlChange={setYoutubeUrl}
           waveformVisible={waveformVisible}
+          volume={volumeA}
+          eqValues={eqValuesA}
+          filter={filterA}
         />
 
         <div className="info-grid">
@@ -143,14 +183,19 @@ function App() {
             waveformVisible={waveformVisible}
             onFileLoad={handleFileLoad}
             onPlayPause={handlePlayPause}
+            onAudioInputSelect={handleAudioInputSelect}
             audioEngine={audioEngineRef.current}
           />
 
           <Mixer
             crossfaderValue={crossfaderValue}
-            eqValues={eqValues}
+            eqValuesA={eqValuesA}
+            eqValuesB={eqValuesB}
+            volumeA={volumeA}
+            volumeB={volumeB}
             onCrossfaderChange={handleCrossfaderChange}
             onEqChange={handleEqChange}
+            deckBAnalyser={deckBAnalyser}
           />
         </div>
       </main>

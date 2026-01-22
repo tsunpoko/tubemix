@@ -152,6 +152,53 @@ export class AudioEngine {
     }
   }
 
+  // Audio input from external device (e.g., DDJ-FLX4)
+  private mediaStreamSource: MediaStreamAudioSourceNode | null = null
+  private mediaStream: MediaStream | null = null
+
+  async startAudioInput(deviceId: string): Promise<void> {
+    if (!this.audioContext || !this.lowFilter) return
+
+    // Resume context if suspended
+    if (this.audioContext.state === 'suspended') {
+      await this.audioContext.resume()
+    }
+
+    // Stop existing input
+    this.stopAudioInput()
+
+    try {
+      // Get audio stream from device
+      this.mediaStream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          deviceId: { exact: deviceId },
+          echoCancellation: false,
+          noiseSuppression: false,
+          autoGainControl: false,
+        }
+      })
+
+      // Create source from stream
+      this.mediaStreamSource = this.audioContext.createMediaStreamSource(this.mediaStream)
+
+      // Connect to EQ chain
+      this.mediaStreamSource.connect(this.lowFilter)
+    } catch (error) {
+      console.error('Failed to start audio input:', error)
+    }
+  }
+
+  stopAudioInput(): void {
+    if (this.mediaStreamSource) {
+      this.mediaStreamSource.disconnect()
+      this.mediaStreamSource = null
+    }
+    if (this.mediaStream) {
+      this.mediaStream.getTracks().forEach(track => track.stop())
+      this.mediaStream = null
+    }
+  }
+
   getAnalyser(): AnalyserNode | null {
     return this.analyser
   }

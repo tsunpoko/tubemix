@@ -55,7 +55,7 @@ function Waveform({ type, color, analyser }: WaveformProps) {
 
   // Real audio waveform
   useEffect(() => {
-    if (type !== 'audio' || !analyser) return
+    if (type !== 'audio') return
 
     const canvas = canvasRef.current
     if (!canvas) return
@@ -63,25 +63,38 @@ function Waveform({ type, color, analyser }: WaveformProps) {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    const bufferLength = analyser.frequencyBinCount
-    const dataArray = new Uint8Array(bufferLength)
-
     const draw = () => {
-      analyser.getByteFrequencyData(dataArray)
-
       const { width, height } = canvas
       ctx.clearRect(0, 0, width, height)
 
-      const barWidth = (width / bufferLength) * 2.5
-      let x = 0
+      if (analyser) {
+        // Real audio visualization
+        const bufferLength = analyser.frequencyBinCount
+        const dataArray = new Uint8Array(bufferLength)
+        analyser.getByteFrequencyData(dataArray)
 
-      for (let i = 0; i < bufferLength; i++) {
-        const barHeight = (dataArray[i] / 255) * height
+        const barWidth = (width / bufferLength) * 2.5
+        let x = 0
 
-        ctx.fillStyle = color
-        ctx.fillRect(x, height - barHeight, barWidth, barHeight)
+        for (let i = 0; i < bufferLength; i++) {
+          const barHeight = (dataArray[i] / 255) * height
 
-        x += barWidth + 1
+          // Gradient color based on intensity
+          const intensity = dataArray[i] / 255
+          ctx.fillStyle = intensity > 0.1 ? color : 'rgba(0, 210, 255, 0.2)'
+          ctx.fillRect(x, height - barHeight, barWidth, barHeight)
+
+          x += barWidth + 1
+        }
+      } else {
+        // Waiting state - show subtle animation
+        const barCount = 50
+        const barWidth = width / barCount
+        for (let i = 0; i < barCount; i++) {
+          const barHeight = (Math.sin(Date.now() / 1000 + i * 0.2) * 0.1 + 0.15) * height
+          ctx.fillStyle = 'rgba(0, 210, 255, 0.2)'
+          ctx.fillRect(i * barWidth, (height - barHeight) / 2, barWidth - 1, barHeight)
+        }
       }
 
       animationRef.current = requestAnimationFrame(draw)
