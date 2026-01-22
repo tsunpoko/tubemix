@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TubeMix B2B | UI Mockup</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0a0c;
+            --panel-bg: rgba(255, 255, 255, 0.05);
+            --accent-blue: #00d2ff;
+            --accent-pink: #ff0080;
+            --text-main: #e0e0e0;
+            --text-dim: #888;
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: radial-gradient(circle at 50% -20%, #1a1a2e 0%, #0a0a0c 100%);
+        }
+
+        header {
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 100;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        .status {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            gap: 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: calc(100% - 3rem);
+        }
+
+        /* Deck A: YouTube Section */
+        .deck-a {
+            flex: 1.5;
+            background: #000;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 0 50px rgba(0, 210, 255, 0.1);
+        }
+
+        .youtube-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: url('https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1200') center/cover;
+            opacity: 0.6;
+        }
+
+        .overlay-info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(5px);
+        }
+
+        /* Deck B & Info Section */
+        .info-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--panel-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .waveform-container {
+            height: 80px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            overflow: hidden;
+        }
+
+        .waveform-bar {
+            width: 3px;
+            background: var(--accent-blue);
+            margin: 0 1px;
+            border-radius: 2px;
+            animation: pulse 1s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                height: 20%;
+            }
+
+            50% {
+                height: 80%;
+            }
+        }
+
+        .big-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1;
+            margin: 0.5rem 0;
+            color: var(--text-main);
+        }
+
+        .unit {
+            font-size: 1rem;
+            color: var(--text-dim);
+            margin-left: 5px;
+        }
+
+        .pitch-display {
+            color: var(--accent-pink);
+        }
+
+        .mixer {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex: 1;
+        }
+
+        .knob-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .knob {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #444, #222);
+            border: 2px solid #555;
+            position: relative;
+        }
+
+        .knob::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 8px;
+            background: var(--accent-blue);
+            border-radius: 2px;
+        }
+
+        .fader-track {
+            width: 100%;
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+            position: relative;
+            margin-top: 2rem;
+        }
+
+        .fader-handle {
+            width: 40px;
+            height: 20px;
+            background: #666;
+            border-radius: 4px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid #888;
+        }
+
+        footer {
+            padding: 1rem 2rem;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            text-align: center;
+            border-top: 1px solid var(--glass-border);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">TubeMix B2B</div>
+        <div style="display: flex; gap: 20px; align-items: center;">
+            <button id="toggle-wave"
+                style="background: var(--panel-bg); color: #fff; border: 1px solid var(--glass-border); padding: 5px 15px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">WAVEFORMS:
+                ON</button>
+            <div class="status">● DDJ-FLX4 CONNECTED</div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Deck A: The Challenge -->
+        <div class="deck-a">
+            <div class="youtube-placeholder">
+                <div style="font-size: 2rem; font-weight: bold; text-shadow: 0 0 20px black;">NOW PLAYING: BOILER ROOM
+                    LONDON</div>
+                <div style="margin-top: 10px; color: #ccc;">DJ: Peggy Gou - House / Techno Set</div>
+
+                <!-- NEW: Simulated YouTube Waveform Overlay -->
+                <div class="waveform-a waveform-container"
+                    style="position: absolute; bottom: 0; left: 0; width: 100%; height: 60px; background: rgba(0,0,0,0.4); backdrop-filter: none; border-radius: 0; border: none; border-top: 1px solid var(--glass-border);">
+                    <div
+                        style="position: absolute; left: 10px; top: 5px; font-size: 0.6rem; color: var(--accent-blue);">
+                        EXTRACTED WAVEFORM (SIMULATED)</div>
+                    <div id="wave-a-bars"
+                        style="display: flex; align-items: center; width: 100%; height: 100%; padding: 0 5px; gap: 2px;">
+                        <!-- Generated by JS for demo -->
+                    </div>
+                </div>
+            </div>
+            <div class="overlay-info">DECK A (MASTER)</div>
+        </div>
+
+        <!-- Deck B & Controls -->
+        <div class="info-grid">
+            <div class="card">
+                <span style="font-size: 0.7rem; color: var(--accent-blue); font-weight: bold;">DECK B (LOCAL /
+                    TARGET)</span>
+                <div class="big-number">128.00<span class="unit">BPM</span></div>
+                <div class="waveform-b waveform-container" id="waveform">
+                    <div id="wave-b-bars"
+                        style="display: flex; align-items: center; width: 100%; height: 100%; gap: 1px;">
+                        <!-- Generated by JS -->
+                    </div>
+                </div>
+            </div>
+            <!-- ... rest of the grid ... -->
+            <div class="card">
+                <span style="font-size: 0.7rem; color: var(--accent-pink); font-weight: bold;">PITCH OFFSET</span>
+                <div class="big-number pitch-display">+0.42<span class="unit">%</span></div>
+                <div style="margin-top: 10px; font-size: 0.8rem; color: var(--text-dim);">SYNC: DISABLED (EAR ONLY)
+                </div>
+            </div>
+
+            <div class="card mixer">
+                <div class="knob-container">
+                    <div class="knob" style="transform: rotate(30deg);"></div>
+                    <span style="font-size: 0.6rem;">HI</span>
+                </div>
+                <div class="knob-container">
+                    <div class="knob" style="transform: rotate(-20deg);"></div>
+                    <span style="font-size: 0.6rem;">MID</span>
+                </div>
+                <div class="knob-container">
+                    <div class="knob" style="transform: rotate(45deg);"></div>
+                    <span style="font-size: 0.6rem;">LOW</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="fader-track">
+            <div class="fader-handle"></div>
+        </div>
+    </main>
+
+    <script>
+        const waveA = document.getElementById('wave-a-bars');
+        const waveB = document.getElementById('wave-b-bars');
+        const toggleBtn = document.getElementById('toggle-wave');
+        let waveVisible = true;
+
+        function createBars(container, color, count) {
+            for (let i = 0; i < count; i++) {
+                const bar = document.createElement('div');
+                bar.style.flex = "1";
+                bar.style.backgroundColor = color;
+                bar.style.borderRadius = "2px";
+                bar.style.height = (Math.random() * 80 + 10) + "%";
+                container.appendChild(bar);
+            }
+        }
+
+        createBars(waveA, '#ff0080', 200);
+        createBars(waveB, '#00d2ff', 150);
+
+        toggleBtn.addEventListener('click', () => {
+            waveVisible = !waveVisible;
+            document.querySelectorAll('.waveform-container').forEach(el => {
+                el.style.opacity = waveVisible ? '1' : '0.05';
+            });
+            toggleBtn.textContent = `WAVEFORMS: ${waveVisible ? 'ON' : 'OFF'}`;
+            toggleBtn.style.color = waveVisible ? '#fff' : '#444';
+        });
+    </script>
+
+    <footer>
+        TubeMix B2B | Fade to Face Concept Design | Powered by Web MIDI & Web Audio
+    </footer>
+</body>
+
+</html>

@@ -1,0 +1,141 @@
+.deck-b {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+}
+
+.deck-b-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.deck-b-label {
+  font-size: 0.7rem;
+  color: var(--accent-blue);
+  font-weight: bold;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+}
+
+.file-name {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.drop-zone {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-md);
+  border: 2px dashed var(--glass-border);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+  min-height: 150px;
+}
+
+.drop-zone.dragging {
+  border-color: var(--accent-blue);
+  background: rgba(0, 210, 255, 0.05);
+}
+
+.drop-icon {
+  font-size: 2rem;
+}
+
+.drop-text {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+
+.file-input-label {
+  font-size: 0.8rem;
+  color: var(--accent-blue);
+  cursor: pointer;
+  padding: var(--spacing-xs) var(--spacing-md);
+  border: 1px solid var(--accent-blue);
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
+}
+
+.file-input-label:hover {
+  background: rgba(0, 210, 255, 0.1);
+}
+
+.file-input {
+  display: none;
+}
+
+.deck-b-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  flex: 1;
+}
+
+.bpm-display,
+.pitch-display {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-xs);
+}
+
+.big-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.unit {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+}
+
+.play-button {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--panel-bg);
+  border: 2px solid var(--glass-border);
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+  align-self: center;
+}
+
+.play-button:hover {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);
+}
+
+.play-button.playing {
+  background: var(--gradient-primary);
+  border-color: transparent;
+}
+
+.sync-status {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+.waveform-section {
+  flex: 1;
+  min-height: 80px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-md);
+  transition: opacity var(--transition-normal);
+}
+
+.waveform-section.hidden {
+  opacity: 0.05;
+}
